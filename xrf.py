@@ -3,15 +3,16 @@
 XRF Protocol Driver
 """
 from __future__ import print_function
-import logging
+
 import Queue
+import logging
 import threading
-import serial
-import serial.tools.list_ports
 import time
 
+import serial
+import serial.tools.list_ports
 
-logging.basicConfig(level=logging.INFO, format='(%(threadName)-10s) %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='(%(asctime)-15s %(threadName)-10s) %(message)s')
 
 XRF_VERSION = 2     # version of XRF specification to be used
 XRF_MAXLEN = 61     # maximum total packet length (limited by CC430)
@@ -214,9 +215,24 @@ class XrfCommsThread(threading.Thread):
     defaultHops = 0
     channel = 0
 
+    # Here will be the instance stored.
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        """ Static access method. """
+        if XrfCommsThread.__instance == None:
+            XrfCommsThread()
+        return XrfCommsThread.__instance
+
     def __init__(self, group=None, target=None, name="XrfComms",
                  args=(), kwargs=None, verbose=None):
         """ Constructor for XrfCommsThread object """
+        if XrfCommsThread.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            XrfCommsThread.__instance = self
+
         threading.Thread.__init__(self, group=group, target=target, name=name,
                                   verbose=verbose)
         self.args = args
@@ -239,8 +255,8 @@ class XrfCommsThread(threading.Thread):
         assert pkt.__class__.__name__ == 'UartPacket'
         buff = bytearray([pkt.type, pkt.length])
         buff += pkt.payload
-        buffstr = "".join("%02x " % b for b in buff)
-        logging.debug(' TX: len=%d, %s' % (len(buff), buffstr))
+        #debugstr = "".join("%02x " % b for b in buff)
+        #logging.debug(' TX: len=%d, %s' % (len(buff), debugStr))
         self.serial.write(buff)
         return
 
@@ -282,16 +298,17 @@ class XrfCommsThread(threading.Thread):
         while True:
             while self.serial.inWaiting() > 0:
                 try:
-                    buff = self.serial.read(64)
-                    # logging.debug('received %s', buff.encode('hex'))
+                    buff = self.serial.read(256)
+                    logging.debug('RX:%s', buff.encode('hex'))
                     self.parse_buff(buff)
                 except:
                     pass
 
             while not self.txQueue.empty():
                 pkt = self.txQueue.get()
-                # logging.debug('got tx packet %s', pkt)
                 self.transmit_packet(pkt)
+                if not self.txQueue.empty():
+                    time.sleep(0.1)         # short time delay if we're going to send multiple packets
 
         logging.debug('exiting thread')
         return
@@ -458,15 +475,28 @@ class XrfCommsThread(threading.Thread):
 
 class XrfAPI(threading.Thread):
     """ XRF API class """
+    # Here will be the instance stored.
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        """ Static access method. """
+        if XrfAPI.__instance == None:
+            XrfAPI()
+        return XrfAPI.__instance
 
     def __init__(self, group=None, target=None, name="XrfAPI",
                  args=(), kwargs=None, verbose=None):
         """ Constructor for XrfAPI object """
+        if XrfAPI.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            XrfAPI.__instance = self
+
         threading.Thread.__init__(self, group=group, target=target, name=name,
                                   verbose=verbose)
         self.args = args
-        self.kwargs = kwargs
-        self.xrfThread = XrfCommsThread()
+        self.xrfThread = XrfCommsThread.getInstance()
         self.xrfThread.start()
         self.discoveredDevices = dict()
         self.currentChannel = 0
@@ -477,7 +507,10 @@ class XrfAPI(threading.Thread):
         while True:
             if not self.xrfThread.rxQueue.empty():
                 pkt = self.xrfThread.rxQueue.get()
+                #debugStr = 'RX packet: '.join('%02x ' % b for b in pkt.payload)
+                #print(debugStr)
                 if pkt.type == 'L':
+                    #print('Log message')
                     try:
                         dbgstr = pkt.payload.decode('ascii')
                         dbgstr = dbgstr.rstrip('\r\n')
@@ -485,7 +518,14 @@ class XrfAPI(threading.Thread):
                     except:
                         pass
                 elif pkt.type == 'R':
+                    print('RX packet')
                     self.parseRxPacket(pkt.payload)
+                elif pkt.type == 'T':
+                    debugStr = ''.join('%02x' % b for b in pkt.payload)
+                    print('TX packet ' + debugStr)
+                elif pkt.type == 'C':
+                    debugStr = ''.join('%02x' % b for b in pkt.payload)
+                    print('Dongle command ' + debugStr)
                 else:
                     print('unknown type %c' % pkt.type)
         return
@@ -562,6 +602,8 @@ class XrfAPI(threading.Thread):
 
     def parseRxPacket(self, payload):
         """ Parse a received packet, updating the device database as necessary """
+        debugStr = "".join("%02x " % b for b in payload)
+        logging.debug(debugStr)
         length = payload[0]
         msgheader = payload[1]
         unicast = msgheader | 0x80
@@ -574,9 +616,10 @@ class XrfAPI(threading.Thread):
         print(' RX: type=%s, param=%s, hop=%d, group=%d' % (typename, paramName, hopcount, group))
 
         if msgtype == XRF_TYPE_ID:
-            pass
+            logging.debug('XRF_TYPE_ID')
 
         elif msgtype == XRF_TYPE_IDACK:
+            logging.debug('XRF_TYPE_IDACK')
             uid = bytearray([payload[4], payload[5], payload[6], payload[7], payload[8], payload[9], payload[10], payload[11]])
             uidStr = "".join("%02x" % b for b in uid)
             model = payload[13]
@@ -585,8 +628,11 @@ class XrfAPI(threading.Thread):
 
             device = self.discoveredDevices.get(uidStr)
             if not device:
+                logging.debug('Discovered new device ' + uidStr)
                 device = dict()
                 self.discoveredDevices[uidStr] = device
+            else:
+                logging.debug('Discovered existing device ' + uidStr)
             device['model'] = modelStr
             device['group'] = group
             device['hopcount'] = hopcount
@@ -594,14 +640,18 @@ class XrfAPI(threading.Thread):
             device['fwversion'] = version
 
         elif msgtype == XRF_TYPE_REPORTACK:
+            logging.debug('XRF_TYPE_REPORTACK')
             uid = bytearray([payload[4], payload[5], payload[6], payload[7], payload[8], payload[9], payload[10], payload[11]])
             uidStr = "".join("%02x" % b for b in uid)
 
             # Get/create device object
             device = self.discoveredDevices.get(uidStr)
             if not device:
+                logging.debug('Discovered new device ' + uidStr)
                 device = dict()
                 self.discoveredDevices[uidStr] = device
+            else:
+                logging.debug('Discovered existing device ' + uidStr)
 
             device['group'] = group
             device['hopcount'] = hopcount
@@ -615,6 +665,9 @@ class XrfAPI(threading.Thread):
                 timestamp = time.ctime()
                 device['lastmotion'] = timestamp
                 device['lastmotiontype'] = 'fancy'
+
+        else:
+            logging.debug('Unsupported (yet!) msg type %d (%s)' % (msgtype, typename))
         return
 
     def setChannel(self, channel):
@@ -637,7 +690,6 @@ class XrfAPI(threading.Thread):
         for uidStr in keys:
             device = self.discoveredDevices.get(uidStr)
             new_device = dict()
-            new_device['address'] = 'localhost'
             new_device['uid'] = uidStr
             for key in device.keys():
                 new_device[key] = device[key]
