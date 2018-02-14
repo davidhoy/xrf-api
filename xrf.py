@@ -8,9 +8,9 @@ import Queue
 import logging
 import threading
 import time
-
 import serial
 import serial.tools.list_ports
+
 
 logging.basicConfig(level=logging.DEBUG, format='(%(asctime)-15s %(threadName)-10s) %(message)s')
 
@@ -248,6 +248,7 @@ class XrfCommsThread(threading.Thread):
             self.serial = serial.Serial(port, 115200, timeout=0.1)
         else:
             logging.error('no Xi-Fi dongle detected')
+            assert port != None
         return
 
     def transmit_packet(self, pkt):
@@ -299,7 +300,7 @@ class XrfCommsThread(threading.Thread):
             while self.serial.inWaiting() > 0:
                 try:
                     buff = self.serial.read(256)
-                    logging.debug('RX:%s', buff.encode('hex'))
+                    #logging.debug('RX:%s', buff.encode('hex'))
                     self.parse_buff(buff)
                 except:
                     pass
@@ -477,6 +478,10 @@ class XrfAPI(threading.Thread):
     """ XRF API class """
     # Here will be the instance stored.
     __instance = None
+    discoveredDevices = None
+    deviceLock = None
+    currentChannel = 1
+
 
     @staticmethod
     def getInstance():
@@ -499,7 +504,8 @@ class XrfAPI(threading.Thread):
         self.xrfThread = XrfCommsThread.getInstance()
         self.xrfThread.start()
         self.discoveredDevices = dict()
-        self.currentChannel = 0
+        self.deviceLock = threading.Lock()
+        self.currentChannel = 1
         return
 
     def run(self):
@@ -514,11 +520,10 @@ class XrfAPI(threading.Thread):
                     try:
                         dbgstr = pkt.payload.decode('ascii')
                         dbgstr = dbgstr.rstrip('\r\n')
-                        logging.debug('DBG: ' + dbgstr)
+                        #logging.debug('DBG: ' + dbgstr)
                     except:
                         pass
                 elif pkt.type == 'R':
-                    print('RX packet')
                     self.parseRxPacket(pkt.payload)
                 elif pkt.type == 'T':
                     debugStr = ''.join('%02x' % b for b in pkt.payload)
@@ -602,8 +607,8 @@ class XrfAPI(threading.Thread):
 
     def parseRxPacket(self, payload):
         """ Parse a received packet, updating the device database as necessary """
-        debugStr = "".join("%02x " % b for b in payload)
-        logging.debug(debugStr)
+        #debugStr = "".join("%02x " % b for b in payload)
+        #logging.debug(debugStr)
         length = payload[0]
         msgheader = payload[1]
         unicast = msgheader | 0x80
@@ -613,7 +618,11 @@ class XrfAPI(threading.Thread):
         group = payload[3]
         typename = self.typeToName(msgtype)
         paramName = self.paramToName(msgparam)
-        print(' RX: type=%s, param=%s, hop=%d, group=%d' % (typename, paramName, hopcount, group))
+        logging.debug('RX: type=%s, param=%s, hop=%d, group=%d' % (typename, paramName, hopcount, group))
+
+        self.deviceLock.acquire()
+        #print(self)
+        #print('Before:' + str(self.discoveredDevices))
 
         if msgtype == XRF_TYPE_ID:
             logging.debug('XRF_TYPE_ID')
@@ -665,9 +674,11 @@ class XrfAPI(threading.Thread):
                 timestamp = time.ctime()
                 device['lastmotion'] = timestamp
                 device['lastmotiontype'] = 'fancy'
-
         else:
             logging.debug('Unsupported (yet!) msg type %d (%s)' % (msgtype, typename))
+
+        #print(' After:' + str(self.discoveredDevices))
+        self.deviceLock.release()
         return
 
     def setChannel(self, channel):
@@ -685,7 +696,11 @@ class XrfAPI(threading.Thread):
 
     def getDevices(self):
         """ Convert discoveredDevices dictionary into a list """
+        #print(self)
+        #print(dir(self))
         device_list = list()
+        self.deviceLock.acquire()
+        #print(str(self.discoveredDevices))
         keys = self.discoveredDevices.keys()
         for uidStr in keys:
             device = self.discoveredDevices.get(uidStr)
@@ -694,4 +709,5 @@ class XrfAPI(threading.Thread):
             for key in device.keys():
                 new_device[key] = device[key]
             device_list.append(new_device)
+        self.deviceLock.release()
         return device_list

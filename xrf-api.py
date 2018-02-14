@@ -1,21 +1,14 @@
-
-
-
 #!flask/bin/python
+
 from flask import Flask, jsonify
 from flask import abort
 from flask import make_response
 from flask import url_for
-
-import xrf
+from xrf import XrfAPI
 
 # Create web API instance.
 app = Flask(__name__)
 port = 5000
-
-# Start the Xi-Fi interface
-xrfapi = xrf.XrfAPI.getInstance()
-xrfapi.start()
 
 
 def make_public_device(device):
@@ -37,13 +30,13 @@ def not_found(error):
 
 @app.route('/xrf-api/v1.0/devices', methods=['GET'])
 def get_devices():
-    devices = xrfapi.getDevices()
+    devices = XrfAPI.getInstance().getDevices()
     return jsonify({'devices': [make_public_device(device) for device in devices]})
 
 
 @app.route('/xrf-api/v1.0/device/<uid>', methods=['GET'])
 def get_device(uid):
-    devices = xrfapi.getDevices()
+    devices = XrfAPI.getInstance().getDevices()
     device = [device for device in devices if device['uid'] == uid]
     if len(device) == 0:
         abort(404)
@@ -52,19 +45,23 @@ def get_device(uid):
 
 @app.route('/xrf-api/v1.0/discover/<int:channel>', methods=['GET'])
 def discover_devices(channel):
-    xrfapi.setChannel(channel)
-    xrfapi.IDRequestAll(0xFF)
-    devices = xrfapi.getDevices()
+    XrfAPI.getInstance().setChannel(channel)
+    devices = XrfAPI.getInstance().IDRequestAll(0xFF)
     return jsonify({'devices':  [make_public_device(device) for device in devices]})
 
 
 @app.route('/xrf-api/v1.0/setchannel/<int:channel>', methods=['GET'])
 def set_channel(channel):
-    xrfapi.setChannel(channel)
+    XrfAPI.getInstance().setChannel(channel)
     return jsonify({'result': 'success'})
 
 
+def main():
+    XrfAPI.getInstance().start()
+    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=port)
+    main()
 
 
