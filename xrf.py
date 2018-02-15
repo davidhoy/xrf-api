@@ -628,7 +628,7 @@ class XrfAPI(threading.Thread):
             logging.debug('XRF_TYPE_ID')
 
         elif msgtype == XRF_TYPE_IDACK:
-            logging.debug('XRF_TYPE_IDACK')
+            #logging.debug('XRF_TYPE_IDACK')
             uid = bytearray([payload[4], payload[5], payload[6], payload[7], payload[8], payload[9], payload[10], payload[11]])
             uidStr = "".join("%02x" % b for b in uid)
             model = payload[13]
@@ -649,7 +649,7 @@ class XrfAPI(threading.Thread):
             device['fwversion'] = version
 
         elif msgtype == XRF_TYPE_REPORTACK:
-            logging.debug('XRF_TYPE_REPORTACK')
+            #logging.debug('XRF_TYPE_REPORTACK')
             uid = bytearray([payload[4], payload[5], payload[6], payload[7], payload[8], payload[9], payload[10], payload[11]])
             uidStr = "".join("%02x" % b for b in uid)
 

@@ -1,5 +1,4 @@
 #!flask/bin/python
-
 from flask import Flask, jsonify
 from flask import abort
 from flask import make_response
@@ -18,8 +17,7 @@ def make_public_device(device):
             uid = device[field]
             uri = url_for('get_device', uid=uid, _external=True)
             new_device['uri'] = uri
-        else:
-            new_device[field] = device[field]
+        new_device[field] = device[field]
     return new_device
 
 
