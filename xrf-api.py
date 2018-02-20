@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask import abort
 from flask import make_response
 from flask import url_for
@@ -39,6 +39,39 @@ def get_device(uid):
     if len(device) == 0:
         abort(404)
     return jsonify({'device': make_public_device(device[0])})
+
+
+@app.route('/xrf-api/v1.0/setpwm/<uid>', methods=['PUT'])
+def device_setpwm(uid):
+    if len(uid) == 0:
+        abort(404)
+    devices = XrfAPI.getInstance().getDevices()
+    device = [device for device in devices if device['uid'] == uid]
+    if len(device) == 0:
+        abort(404)
+    #if not request.json:
+    #    abort(400)
+    occMains = request.json.get('occMains', 255)
+    occBatt = request.json.get('occBatt', 255)
+    unoccMains = request.json.get('unoccMains', 255)
+    unoccBatt = request.json.get('unoccBatt', 255)
+    levels = bytearray([occMains, occBatt, unoccMains, unoccBatt])
+    XrfAPI.getInstance().setPWMLevels(0, uid, levels)
+    return jsonify({'result': 'success'})
+
+
+@app.route('/xrf-api/v1.0/getpwm/<uid>', methods=['GET'])
+def device_getpwm(uid):
+    if len(uid) == 0:
+        abort(404)
+    devices = XrfAPI.getInstance().getDevices()
+    device = [device for device in devices if device['uid'] == uid]
+    if len(device) == 0:
+        abort(404)
+    #if not request.json:
+    #    abort(400)
+    levels = XrfAPI.getInstance().getPWMLevels(0, uid)
+    return jsonify({'pwmlevels': levels})
 
 
 @app.route('/xrf-api/v1.0/discover/<int:channel>', methods=['GET'])

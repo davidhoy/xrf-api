@@ -166,7 +166,7 @@ class XrfPacket(object):
     """ Create XRF packet """
     length = 0
     header = 0
-    hop = 0
+    hop = 1
     payload = []
 
     def __init__(self):
@@ -212,8 +212,8 @@ def get_serial_port():
 
 class XrfCommsThread(threading.Thread):
     """ XRF Protocol Thread """
-    defaultHops = 0
-    channel = 0
+    defaultHops = 1
+    channel = 2
 
     # Here will be the instance stored.
     __instance = None
@@ -427,7 +427,7 @@ class XrfCommsThread(threading.Thread):
         hops = self.defaultHops
         buff = bytearray([0, header, hops])
         if uid != None:
-            buff += uid
+            buff += bytearray.fromhex(uid)
         else:
             buff += chr(group)
         buff[0] = len(buff) - 1
@@ -450,12 +450,16 @@ class XrfCommsThread(threading.Thread):
         hops = self.defaultHops
         buff = bytearray([0, header, hops])
         if uid != None:
-            buff += uid
+            buff += bytearray.fromhex(uid)
         else:
             buff += chr(group)
         if values != None:
             buff += values
         buff[0] = len(buff) - 1
+
+        debugStr = ''.join('%02x ' % b for b in buff)
+        print('setParam: ' + debugStr)
+
         uart_pkt = UartPacket()
         uart_pkt.type = UMSG_TXPKT
         uart_pkt.length = len(buff) + 2
@@ -465,7 +469,7 @@ class XrfCommsThread(threading.Thread):
 
     def rfSetPWMLevel(self, group, uid, pwmLevels):
         """ Set PWM levels on group or specified fixture """
-        self.rfSetParameter(XRF_PARAM_IPWM, group, uid, pwmLevels)
+        self.rfSetParameter(XRF_PARAM_PWM, group, uid, pwmLevels)
         return
 
     def rfGetPWMLevel(self, group, uid):
@@ -506,6 +510,7 @@ class XrfAPI(threading.Thread):
         self.discoveredDevices = dict()
         self.deviceLock = threading.Lock()
         self.currentChannel = 1
+        self.ack_event = threading.Event()
         return
 
     def run(self):
@@ -516,11 +521,10 @@ class XrfAPI(threading.Thread):
                 #debugStr = 'RX packet: '.join('%02x ' % b for b in pkt.payload)
                 #print(debugStr)
                 if pkt.type == 'L':
-                    #print('Log message')
                     try:
                         dbgstr = pkt.payload.decode('ascii')
                         dbgstr = dbgstr.rstrip('\r\n')
-                        #logging.debug('DBG: ' + dbgstr)
+                        logging.debug('DBG: ' + dbgstr)
                     except:
                         pass
                 elif pkt.type == 'R':
@@ -621,8 +625,6 @@ class XrfAPI(threading.Thread):
         logging.debug('RX: type=%s, param=%s, hop=%d, group=%d' % (typename, paramName, hopcount, group))
 
         self.deviceLock.acquire()
-        #print(self)
-        #print('Before:' + str(self.discoveredDevices))
 
         if msgtype == XRF_TYPE_ID:
             logging.debug('XRF_TYPE_ID')
@@ -647,6 +649,35 @@ class XrfAPI(threading.Thread):
             device['hopcount'] = hopcount
             device['channel'] = self.currentChannel
             device['fwversion'] = version
+
+
+        elif msgtype == XRF_TYPE_GETACK:
+            logging.debug('XRF_TYPE_GETACK')
+            debugStr = "".join("%02x " % b for b in payload)
+            print(debugStr)
+
+            uid = bytearray([payload[4], payload[5], payload[6], payload[7], payload[8], payload[9], payload[10], payload[11]])
+            uidStr = "".join("%02x" % b for b in uid)
+
+            device = self.discoveredDevices.get(uidStr)
+            if not device:
+                logging.debug('Discovered new device ' + uidStr)
+                device = dict()
+                self.discoveredDevices[uidStr] = device
+            else:
+                logging.debug('Discovered existing device ' + uidStr)
+
+            if msgparam == XRF_PARAM_PWM:
+                pwmlevels = dict()
+                pwmlevels['occMains'] = payload[12]
+                pwmlevels['unoccMains'] = payload[13]
+                pwmlevels['occBatt'] = payload[14]
+                pwmlevels['unoccBatt'] = payload[15]
+                device['pwmlevels'] = pwmlevels
+                device['ackPending'] = False
+
+            self.ack_event.set()
+
 
         elif msgtype == XRF_TYPE_REPORTACK:
             #logging.debug('XRF_TYPE_REPORTACK')
@@ -674,18 +705,22 @@ class XrfAPI(threading.Thread):
                 timestamp = time.ctime()
                 device['lastmotion'] = timestamp
                 device['lastmotiontype'] = 'fancy'
+
+            self.ack_event.set()
+
         else:
             logging.debug('Unsupported (yet!) msg type %d (%s)' % (msgtype, typename))
 
-        #print(' After:' + str(self.discoveredDevices))
         self.deviceLock.release()
         return
+
 
     def setChannel(self, channel):
         """ Set the radio channel """
         self.currentChannel = channel
         self.xrfThread.dongleSetChannel(channel)
         return
+
 
     def IDRequestAll(self, group):
         """ Send an ID request to the specified group (or wildcard) """
@@ -694,13 +729,38 @@ class XrfAPI(threading.Thread):
         device_list = self.getDevices()
         return device_list
 
+
+    def setPWMLevels(self, group, uid, levels):
+        self.ack_event.clear()
+        self.xrfThread.rfSetPWMLevel(group, uid, levels)
+        return
+
+
+    def getPWMLevels(self, group, uid):
+        self.ack_event.clear()
+        if uid:
+            device = self.discoveredDevices.get(uid)
+            if device:
+                device['ackData'] = None
+        else:
+            for device in self.discoveredDevices:
+                device['ackData'] = None
+
+        lvls = self.xrfThread.rfGetPWMLevel(group, uid)
+        self.ack_event.wait(timeout=5)
+
+        levels = None
+        if uid:
+            device = self.discoveredDevices.get(uid)
+            if device:
+                levels = device['pwmlevels']
+        return levels
+
+
     def getDevices(self):
         """ Convert discoveredDevices dictionary into a list """
-        #print(self)
-        #print(dir(self))
         device_list = list()
         self.deviceLock.acquire()
-        #print(str(self.discoveredDevices))
         keys = self.discoveredDevices.keys()
         for uidStr in keys:
             device = self.discoveredDevices.get(uidStr)
