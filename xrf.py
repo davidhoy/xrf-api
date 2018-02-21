@@ -670,8 +670,8 @@ class XrfAPI(threading.Thread):
             if msgparam == XRF_PARAM_PWM:
                 pwmlevels = dict()
                 pwmlevels['occMains'] = payload[12]
-                pwmlevels['unoccMains'] = payload[13]
-                pwmlevels['occBatt'] = payload[14]
+                pwmlevels['occBatt'] = payload[13]
+                pwmlevels['unoccMains'] = payload[14]
                 pwmlevels['unoccBatt'] = payload[15]
                 device['pwmlevels'] = pwmlevels
                 device['ackPending'] = False
@@ -732,6 +732,8 @@ class XrfAPI(threading.Thread):
 
     def setPWMLevels(self, group, uid, levels):
         self.ack_event.clear()
+        debugStr = "".join("%02x " % b for b in levels)
+        logging.debug("levels=" + debugStr)
         self.xrfThread.rfSetPWMLevel(group, uid, levels)
         return
 
