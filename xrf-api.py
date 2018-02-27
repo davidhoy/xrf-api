@@ -4,6 +4,11 @@ from flask import abort
 from flask import make_response
 from flask import url_for
 from xrf import XrfAPI
+import uuid
+from ssdp import SSDPServer
+from ssdp_web_server import UPNPHTTPServer
+import socket
+
 
 # Create web API instance.
 app = Flask(__name__)
@@ -88,6 +93,28 @@ def set_channel(channel):
 
 
 def main():
+    device_uuid = uuid.uuid4()
+    local_ip_address = "10.1.1.150" #socket.gethostbyname(socket.gethostname())
+    http_server = UPNPHTTPServer(8088,
+                                 friendly_name="Xeleum Xi-Fi Gateway",
+                                 manufacturer="Xeleum Lighting",
+                                 manufacturer_url='http://www.xeleum.com/',
+                                 model_description='Xi-Fi Gateway',
+                                 model_name="Xi-F Gateway",
+                                 model_number="XRF001",
+                                 model_url="http://www.xeleum.com",
+                                 serial_number="XRF1234",
+                                 uuid=device_uuid,
+                                 presentation_url="index.html")
+    http_server.start()
+
+    ssdp_server = SSDPServer()
+    ssdp_server.register('local',
+                  'uuid:{}::upnp:rootdevice'.format(device_uuid),
+                  'upnp:rootdevice',
+                  'http://{}:8088/description.xml'.format(local_ip_address))
+    ssdp_server.start()
+
     XrfAPI.getInstance().start()
     app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
 
