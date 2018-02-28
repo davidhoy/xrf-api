@@ -23,6 +23,7 @@ SSDP_ADDR = '239.255.255.250'
 SERVER_ID = 'Xeleum SSDP Server'
 
 
+logging_enabled = False     # Change to True to see logging
 logger = logging.getLogger()
 
 
@@ -88,23 +89,27 @@ class SSDPServer(threading.Thread):
         headers = [x.split(':', 1) for x in lines]
         headers = dict(map(lambda x: (x[0].lower(), x[1]), headers))
 
-        logger.info('SSDP command %s %s - from %s:%d' % (cmd[0], cmd[1], host, port))
-        logger.debug('with headers: {}.'.format(headers))
+        if logging_enabled:
+            logger.info('SSDP command %s %s - from %s:%d' % (cmd[0], cmd[1], host, port))
+            logger.debug('with headers: {}.'.format(headers))
         if cmd[0] == 'M-SEARCH' and cmd[1] == '*':
             # SSDP discovery
             self.discovery_request(headers, (host, port))
         elif cmd[0] == 'NOTIFY' and cmd[1] == '*':
             # SSDP presence
-            logger.debug('NOTIFY *')
+            if logging_enabled:
+                logger.debug('NOTIFY *')
         else:
-            logger.warning('Unknown SSDP command %s %s' % (cmd[0], cmd[1]))
+            if logging_enabled:
+                logger.warning('Unknown SSDP command %s %s' % (cmd[0], cmd[1]))
 
     def register(self, manifestation, usn, st, location, server=SERVER_ID, cache_control='max-age=1800', silent=False,
                  host=None):
         """Register a service or device that this SSDP server will
         respond to."""
 
-        logging.info('Registering %s (%s)' % (st, location))
+        if logging_enabled:
+            logging.info('Registering %s (%s)' % (st, location))
 
         self.known[usn] = {}
         self.known[usn]['USN'] = usn
@@ -123,18 +128,21 @@ class SSDPServer(threading.Thread):
             self.do_notify(usn)
 
     def unregister(self, usn):
-        logger.info("Un-registering %s" % usn)
+        if logging_enabled:
+            logger.info("Un-registering %s" % usn)
         del self.known[usn]
 
     def is_known(self, usn):
         return usn in self.known
 
     def send_it(self, response, destination, delay, usn):
-        logger.debug('send discovery response delayed by %ds for %s to %r' % (delay, usn, destination))
+        if logging_enabled:
+            logger.debug('send discovery response delayed by %ds for %s to %r' % (delay, usn, destination))
         try:
             self.sock.sendto(response.encode(), destination)
         except (AttributeError, socket.error) as msg:
-            logger.warning("failure sending out byebye notification: %r" % msg)
+            if logging_enabled:
+                logger.warning("failure sending out byebye notification: %r" % msg)
 
     def discovery_request(self, headers, host_port):
         """Process a discovery request.  The response must be sent to
@@ -142,8 +150,9 @@ class SSDPServer(threading.Thread):
 
         (host, port) = host_port
 
-        logger.info('Discovery request from (%s,%d) for %s' % (host, port, headers['st']))
-        logger.info('Discovery request for %s' % headers['st'])
+        if logging_enabled:
+            logger.info('Discovery request from (%s,%d) for %s' % (host, port, headers['st']))
+            logger.info('Discovery request for %s' % headers['st'])
 
         # Do we know about this service?
         for i in self.known.values():
@@ -174,7 +183,8 @@ class SSDPServer(threading.Thread):
 
         if self.known[usn]['SILENT']:
             return
-        logger.info('Sending alive notification for %s' % usn)
+        if logging_enabled:
+            logger.info('Sending alive notification for %s' % usn)
 
         resp = [
             'NOTIFY * HTTP/1.1',
@@ -191,17 +201,20 @@ class SSDPServer(threading.Thread):
 
         resp.extend(map(lambda x: ': '.join(x), stcpy.items()))
         resp.extend(('', ''))
-        logger.debug('do_notify content', resp)
+        if logging_enabled:
+            logger.debug('do_notify content', resp)
         try:
             self.sock.sendto('\r\n'.join(resp).encode(), (SSDP_ADDR, SSDP_PORT))
             self.sock.sendto('\r\n'.join(resp).encode(), (SSDP_ADDR, SSDP_PORT))
         except (AttributeError, socket.error) as msg:
-            logger.warning("failure sending out alive notification: %r" % msg)
+            if logging_enabled:
+                logger.warning("failure sending out alive notification: %r" % msg)
 
     def do_byebye(self, usn):
         """Do byebye"""
 
-        logger.info('Sending byebye notification for %s' % usn)
+        if logging_enabled:
+            logger.info('Sending byebye notification for %s' % usn)
 
         resp = [
             'NOTIFY * HTTP/1.1',
@@ -218,11 +231,14 @@ class SSDPServer(threading.Thread):
             del stcpy['last-seen']
             resp.extend(map(lambda x: ': '.join(x), stcpy.items()))
             resp.extend(('', ''))
-            logger.debug('do_byebye content', resp)
+            if logging_enabled:
+                logger.debug('do_byebye content', resp)
             if self.sock:
                 try:
                     self.sock.sendto('\r\n'.join(resp), (SSDP_ADDR, SSDP_PORT))
                 except (AttributeError, socket.error) as msg:
-                    logger.error("failure sending out byebye notification: %r" % msg)
+                    if logging_enabled:
+                        logger.error("failure sending out byebye notification: %r" % msg)
         except KeyError as msg:
-            logger.error("error building byebye notification: %r" % msg)
+            if logging_enabled:
+                logger.error("error building byebye notification: %r" % msg)
