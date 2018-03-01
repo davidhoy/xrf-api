@@ -1,9 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
+import mimetypes
+import os
+
 
 PORT_NUMBER = 8088
-
-index_html = "<html<head><title>Xi-Fi Gateway</title></head><body>Noooooobody expects the Spanish Inquisition...</body></html>"
 
 
 class UPNPHTTPServerHandler(BaseHTTPRequestHandler):
@@ -13,38 +14,28 @@ class UPNPHTTPServerHandler(BaseHTTPRequestHandler):
 
     # Handler for the GET requests
     def do_GET(self):
-        if self.path == '/xeleum_wsd.xml':
-            self.send_response(200)
-            self.send_header('Content-type', 'application/xml')
-            self.end_headers()
-            self.wfile.write(self.get_wsd_xml().encode())
 
-        elif self.path == '/description.xml':
+        if self.path == '/description.xml':
             self.send_response(200)
             self.send_header('Content-type', 'application/xml')
             self.end_headers()
             self.wfile.write(self.get_device_xml().encode())
+            return
 
-        elif  self.path == '/index.html':
+        mimetype = mimetypes.MimeTypes().guess_type(self.path)[0]
+        cwd = os.getcwd()
+        try:
+            file = open(cwd + self.path)
             self.send_response(200)
-            self.send_header('Content-type', 'text/html')
+            self.send_header('Content-type', mimetype)
             self.end_headers()
-            self.wfile.write(index_html.encode())
-
-        elif self.path == '/logo-small.png':
-            f = open(curdir + sep + 'xi-fi-small.png')
-            self.send_response(200)
-            self.send_header('Content-type', 'image/png')
-            self.end_headers()
-            self.wfile.write(f.read())
-            f.close()
-
-        else:
+            self.wfile.write(file.read())
+            file.close()
+        except:
             self.send_response(404)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(b"Not found.")
-
         return
 
 
@@ -53,33 +44,40 @@ class UPNPHTTPServerHandler(BaseHTTPRequestHandler):
         Get the main device descriptor xml file.
         """
         xml = """<root xmlns="urn:schemas-upnp-org:device-1-0">
-    <specVersion>
-        <major>1</major>
-        <minor>0</minor>
-    </specVersion>
-    <device>
-        <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
-        <friendlyName>{friendly_name}</friendlyName>
-        <manufacturer>{manufacturer}</manufacturer>
-        <manufacturerURL>{manufacturer_url}</manufacturerURL>
-        <modelDescription>{model_description}</modelDescription>
-        <modelName>{model_name}</modelName>
-        <modelNumber>{model_number}</modelNumber>
-        <modelURL>{model_url}</modelURL>
-        <serialNumber>{serial_number}</serialNumber>
-        <UDN>uuid:{uuid}</UDN>
-        <presentationURL>{presentation_url}</presentationURL>
-        <iconList>
-        <icon>
-        <mimetype>image/png</mimetype>
-        <height>48</height>
-        <width>48</width>
-        <depth>24</depth>
-        <url>/logo-small.png</url>
-        </icon>
-        </iconList>
-    </device>
-</root>"""
+                <specVersion>
+                    <major>1</major>
+                    <minor>0</minor>
+                </specVersion>
+                <device>
+                    <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
+                    <friendlyName>{friendly_name}</friendlyName>
+                    <manufacturer>{manufacturer}</manufacturer>
+                    <manufacturerURL>{manufacturer_url}</manufacturerURL>
+                    <modelDescription>{model_description}</modelDescription>
+                    <modelName>{model_name}</modelName>
+                    <modelNumber>{model_number}</modelNumber>
+                    <modelURL>{model_url}</modelURL>
+                    <serialNumber>{serial_number}</serialNumber>
+                    <UDN>uuid:{uuid}</UDN>
+                    <presentationURL>{presentation_url}</presentationURL>
+                    <iconList>
+                        <icon>
+                            <mimetype>image/png</mimetype>
+                            <height>48</height>
+                            <width>48</width>
+                            <depth>24</depth>
+                            <url>/img/xi-fi-small.png</url>
+                        </icon>
+                        <icon>
+                            <mimetype>image/png</mimetype>
+                            <height>778</height>
+                            <width>788</width>
+                            <depth>24</depth>
+                            <url>/img/xi-fi.png</url>
+                        </icon>
+                    </iconList>
+                </device>
+            </root>"""
 
         return xml.format(friendly_name=self.server.friendly_name,
                           manufacturer=self.server.manufacturer,
@@ -98,11 +96,11 @@ class UPNPHTTPServerHandler(BaseHTTPRequestHandler):
         Get the device WSD file.
         """
         return """<scpd xmlns="urn:schemas-upnp-org:service-1-0">
-<specVersion>
-<major>1</major>
-<minor>0</minor>
-</specVersion>
-</scpd>"""
+                    <specVersion>
+                        <major>1</major>
+                        <minor>0</minor>
+                    </specVersion>
+                </scpd>"""
 
 
 class UPNPHTTPServerBase(HTTPServer):
