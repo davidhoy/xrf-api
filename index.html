@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="img/xi-fi-small.png">
+        <title>Xi-Fi Gateway</title>
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"
+        <!-- Custom styles for this template -->
+        <style type='text/css'>
+            .slidecontainer {
+            width: 100%; /* Width of the outside container */
+            }
+            /* The slider itself */
+            .slider {
+            -webkit-appearance: none;  /* Override default CSS styles */
+            appearance: none;
+            width: 100%; /* Full-width */
+            height: 25px; /* Specified height */
+            background: #d3d3d3; /* Grey background */
+            outline: none; /* Remove outline */
+            opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+            -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+            }
+            /* Mouse-over effects */
+            .slider:hover {
+            opacity: 1; /* Fully shown on mouse-over */
+            }
+            /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+            .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Override default look */
+            appearance: none;
+            width: 25px; /* Set a specific slider handle width */
+            height: 25px; /* Slider handle height */
+            background: #4CAF50; /* Green background */
+            cursor: pointer; /* Cursor on hover */
+            }
+            .slider::-moz-range-thumb {
+            width: 25px; /* Set a specific slider handle width */
+            height: 25px; /* Slider handle height */
+            background: #4CAF50; /* Green background */
+            cursor: pointer; /* Cursor on hover */
+            }
+        </style>
+        <!-- <link href="navbar-top-fixed.css" rel="stylesheet"> -->
+        <script type="text/javascript" language="javascript">
+            function processData(data) {
+                // taking care of data
+            }
+            
+            function handler() {
+                
+                if (this.status == 200 &&
+                    this.responseXML != null &&
+                    this.responseXML.getElementById('test').textContent)
+                {
+                    // success!
+                    processData(this.responseXML.getElementById('test').textContent);
+                } else {
+                    // something went wrong
+                }
+            }
+                  
+            function discover()
+            {
+                URL = "http://127.0.0.1:5000/xrf-api/v1.0/devices"
+            
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = callbackFunction(xmlhttp);
+                //xmlhttp.onload = handler;
+                xmlhttp.open("GET", URL, false);
+                //xmlhttp.send();
+            
+                //alert(xmlhttp.responseText);
+                //var myhtml = document.getElementById("discoverydata");
+                //myhtml.innerHTML = xmlhttp.statusText + ":" + xmlhttp.status + "<BR><textarea rows='100' cols='100'>" + xmlhttp.responseText + "</textarea>";
+            }
+            
+            function callbackFunction(xmlhttp) 
+            {
+                //alert(xmlhttp.responseXML);\
+                var myhtml = document.getElementById("discoverydata");
+                myhtml.innerHTML = xmlhttp.statusText + ":" + xmlhttp.status + "<BR><textarea rows='100' cols='100'>" + xmlhttp.responseText + "</textarea>";
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">Xi-Fi Gateway</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="discover">Discover</a></li>
+                    <li class="nav-item"><a class="nav-link" href="control">Control</a></li>
+                    <li class="nav-item"><a class="nav-link" href="siteplan">Site Plan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about">About</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="container">
+            <div class="jumbotron">
+                <h2>Getting started</h2>
+                <p class="lead">From this control panel you can discover and manage Xi-Fi enabled lighting fixtures in your location.  </p>
+            </div>
+            <div class="container">
+                <table class="table">
+                    <tr>
+                        <td style="width: 1px;"><b>UID</b></td>
+                        <td><b>Model</b></td>
+                        <td><b>Level</b></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="label label-success">4bd50c4715001000</span>
+                        </td>
+                        <td>Athena</td>
+                        <td>
+                            <div class="slidecontainer">
+                                <input type="range" min="0" max="100" value="50" class="slider" id="myRange1">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="label label-important">7720a4460b000f00</span>
+                        </td>
+                        <td>Athena</td>
+                        <td>
+                            <div class="slidecontainer">
+                                <input type="range" min="0" max="100" value="50" class="slider" id="myRange2">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <button class="btn btn-primary">Discover</button>
+            </div>
+        </main>
+        
+        
+        <!-- Bootstrap core JavaScript
+            ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+        <!--<script src="../../../../assets/js/vendor/popper.min.js"></script>-->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
+        <script type='text/javascript'>
+            $(document).ready(function() {
+            	/* Example 1 */
+            	$('#ex1').slider({
+                  	formatter: function(value) {
+                    	return 'Current value: ' + value;
+               	   }
+               });
+               });
+        </script>
+        <script>
+    function CreateTableFromJSON() {
+        var devices = [
+    {
+      "channel": 2, 
+      "fwversion": 150, 
+      "group": 30, 
+      "hopcount": 0, 
+      "lastmotion": "Wed Feb 28 15:51:26 2018", 
+      "lastmotiontype": "simple", 
+      "model": "Athena", 
+      "uid": "7720a4460b000f00", 
+      "uri": "http://localhost:5000/xrf-api/v1.0/device/7720a4460b000f00"
+    }, 
+    {
+      "channel": 2, 
+      "fwversion": 150, 
+      "group": 31, 
+      "hopcount": 1, 
+      "lastmotion": "Thu Mar  1 09:31:48 2018", 
+      "lastmotiontype": "simple", 
+      "model": "Athena", 
+      "uid": "4bd50c4715001000", 
+      "uri": "http://localhost:5000/xrf-api/v1.0/device/4bd50c4715001000"
+    }
+  ]
+        var json = JSON.parse(devices);
+
+   
+        // Column headings
+        var cols = ["UID", "Model", "PWM Level"];
+    
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+        for (var i = 0; i < cols.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = cols[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < devices.length; i++) 
+        {
+            tr = table.insertRow(-1);
+            
+            var uidCell = tr.insertCell(-1);
+            uidCell.innerHTML = json[i].uid;
+            
+            var modelCell = tr.insertCell(-1);
+            modelCell.innerHTML = json[i].model;
+            
+            var pwmCell = tr.insertCell(-1);
+            pwmCell.innerHTML = 
+            
+        }
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }
+</script>
+
+    </body>
+</html>

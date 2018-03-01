@@ -1,0 +1,738 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>Xi-Fi Gateway API - Open Source Usage</title>
+    <style type="text/css">
+      html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, big, cite, code,
+      em, img, small, strong, b, u, i, center {
+          margin: 0;
+          padding: 0;
+          border: 0;
+          font-size: 100%;
+          font: inherit;
+          vertical-align: baseline;
+      }
+      body {
+        line-height: 1;
+        background-color: #252525;
+        font-family: Verdana;
+      }
+      .xeleum-header {
+        height: 41px;
+        width: 100%;
+        background-color: white;
+        position: relative;
+      }
+      .xeleum-logo {
+        position: absolute;
+        left: 23px;
+        top: 14px;
+      }
+      .header {
+        width: 100%;
+        height: 101px;
+        background-color: #FFFFFF;
+        position: relative;        
+      }
+      .header-logo {
+        position: absolute;
+        top: 17px;
+        left: 20px;
+      }
+      .colorline {
+        bottom: -6px;
+        height: 9px;
+        position: absolute;
+        width: 100%;
+      }
+      .container {
+        width: 908px;
+        margin: 50px auto 0 auto;
+        background-color: white;
+        -webkit-border-radius: 2px 2px 0 0;
+        -moz-border-radius: 2px 2px 0 0;
+        border-radius: 2px 2px 0 0;
+      }
+      .inner-container {
+        padding: 35px;
+      }
+      h1 {    
+        height: 51px;
+        padding: 0 20px;        
+        line-height: 51px;
+        color: white;
+        font-size: 18px;
+        text-transform: uppercase;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;     
+        -webkit-border-radius: 2px 2px 0 0;
+        -moz-border-radius: 2px 2px 0 0;
+        border-radius: 2px 2px 0 0;
+        background: #505050; /* Old browsers */                
+        background: -moz-linear-gradient(top, #505050 0%, #000000 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#505050), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, #505050 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, #505050 0%,#000000 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, #505050 0%,#000000 100%); /* IE10+ */
+        background: linear-gradient(to bottom, #505050 0%,#000000 100%); /* W3C */        
+      }
+      h2 {
+        font-size: 16px;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      a {
+        color: black;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      p {
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 15px;
+      }
+      b {
+        font-weight: bold;      
+      }
+    </style>
+</head>
+<body>
+    <div class="xeleum-header">
+      <img src="/img/xeleum.png" class="xeleum" alt="xeleum" width="20%"/>
+    </div>
+    <div class="header">
+      <img class="xifi-logo" src="/img/xi-fi.png" alt="Xi-Fi Gateway API" width="10%" />
+
+      <!--img src="hue-color-line.png" class="colorline" /-->
+      
+    </div>
+    
+
+    <div class="container">
+      <h1>Xi-Fi Gateway API - Open Source Usage</h1>
+      <div class="inner-container">
+        <p>
+            Welcome to Xi-Fi - the premier lighting control system. For more information please see our website <a href="http://www.xeleum.com">www.xeleum.com</a>
+        </p>
+        <h2>Open Source</h2>
+        <p>
+            This product contains software licensed under an open source license. For acknowledgements and license texts, <b>see below</b>. <b>Xeleum Lighting</b> hereby offers to deliver, upon request, a copy of the complete corresponding source code for the copyrighted open source software packages used in this product for which such delivery is requested by the respective licenses. This offer is valid up to three years after <b>purchase or software update</b> to anyone in receipt of this information. To obtain source code, please send your request in English with product type to open.source@xeleum.com. If you prefer not to use email or if you do not receive confirmation receipt within 2 weeks after mailing to this email address, please write in English to "Open Source Team, Xeleum Lighting, 3430 Quantum Blvd, Boynton Beach, FL 33426". If you do not receive timely confirmation of your letter, please email to the email address above.
+        </p>
+        
+        <h2>SHA-1</h2>
+        <p>
+            Website: <a href="http://www.packetizer.com/security/sha1/">http://www.packetizer.com/security/sha1/</a><br>
+            License(s): <a href="sha_license.txt">sha_license.txt</a>
+        </p>
+        <h2>OpenSSL AES Encryption</h2>
+        <p>
+            Website: <a href="https://www.openssl.org/docs/man1.0.2/apps/enc.html">https://www.openssl.org/docs/man1.0.2/apps/enc.html</a><br>
+            License(s): <a href="aesenc_license.txt">aesenc_license.txt</a>
+        </p>
+        <h2>JSON_checker</h2>
+        <p>
+            Website: <a href="http://www.json.org/JSON_checker/">http://www.json.org/JSON_checker/</a><br>
+            License(s): <a href="jsonchecker_license.txt">jsonchecker_license.txt</a>
+        </p>
+        <h2>UTF-8 Decoder</h2>
+        <p>
+            Website: <a href="http://bjoern.hoehrmann.de/utf-8/decoder/dfa">http://bjoern.hoehrmann.de/utf-8/decoder/dfa</a><br>
+            License(s): <a href="utf8decoder_license.txt">utf8decoder_license.txt</a>
+        </p>
+        
+        <!-- Begin Licensing Information -->
+        <h2>argtable 2.13-1</h2>
+        <p>
+            Website: <a href="http://argtable.sourceforge.net/">http://argtable.sourceforge.net/</a><br>
+            License(s): <a href="licenses/lgpl-2.0.txt">LGPL-2.0</a>
+        </p>
+
+        <h2>avahi-autoipd 0.6.31-12</h2>
+        <p>
+            Website: <a href="http://www.avahi.org/">http://www.avahi.org/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>base-files 157.2-r47070</h2>
+        <p>
+            Website: <a href="http://openwrt.org/">http://openwrt.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>busybox 1.23.2-1</h2>
+        <p>
+            Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm.<br>
+            This product includes software developed by the University of California, Berkeley and its contributors.<br>
+            Website: <a href="http://busybox.net/">http://busybox.net/</a><br>
+            License(s): <a href="licenses/busybox.txt">GPL-2.0</a>
+        </p>
+
+        <h2>chacha20-simple 1.0-1</h2>
+        <p>
+            Website: <a href="http://chacha20.insanecoding.org/">http://chacha20.insanecoding.org/</a><br>
+            License(s): <a href="licenses/chacha20-simple.txt">ISC</a>
+        </p>
+
+        <h2>curve25519-donna 1.0</h2>
+        <p>
+            Website: <a href="https://code.google.com/p/curve25519-donna/">https://code.google.com/p/curve25519-donna/</a><br>
+            License(s): <a href="licenses/curve25519-donna.txt">MIT</a>
+        </p>
+
+        <h2>dbus 1.9.14</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>dropbear 2015.67-1</h2>
+        <p>
+            Website: <a href="http://matt.ucc.asn.au/dropbear/">http://matt.ucc.asn.au/dropbear/</a><br>
+            License(s): <a href="licenses/dropbear.txt">MIT</a>
+        </p>
+
+        <h2>ed25519-donna 1.0</h2>
+        <p>
+            Website: <a href="http://ed25519.cr.yp.to/">http://ed25519.cr.yp.to/</a><br>
+            License(s): <a href="licenses/ed25519-donna.txt">MIT</a>
+        </p>
+
+        <h2>expat 2.1.0</h2>
+        <p>
+            License(s): <a href="licenses/expat.txt">MIT</a>
+        </p>
+
+        <h2>firewall 2015-07-27</h2>
+        <p>
+            License(s): <a href="licenses/firewall.txt">ISC</a>
+        </p>
+
+        <h2>fstools 2016-01-10-96415afecef35766332067f4205ef3b2c7561d21</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>gdbm 1.11</h2>
+        <p>
+            License(s): <a href="licenses/gdbm.txt">GPL-3.0</a>
+        </p>
+
+        <h2>grpc 2017-04-12-v1.2.4</h2>
+        <p>
+            License(s): <a href="licenses/grpc.txt">BSD-3-Clause</a>
+        </p>
+
+        <h2>hostapd 2015-09-27-1</h2>
+        <p>
+            Website: <a href="http://hostap.epitest.fi/">http://hostap.epitest.fi/</a><br>
+            License(s): <a href="licenses/hostapd.txt">BSD-3-Clause-Clear</a>
+        </p>
+
+        <h2>hostapd-common 2015-09-27-1</h2>
+        <p>
+            License(s): <a href="licenses/hostapd-common.txt">BSD-3-Clause-Clear</a>
+        </p>
+
+        <h2>hostapd-utils 2015-09-27-1</h2>
+        <p>
+            Website: <a href="http://hostap.epitest.fi/">http://hostap.epitest.fi/</a><br>
+            License(s): <a href="licenses/hostapd-utils.txt">BSD-3-Clause-Clear</a>
+        </p>
+
+        <h2>iptables 1.4.21-1</h2>
+        <p>
+            Website: <a href="http://netfilter.org/">http://netfilter.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>iw 4.3-1</h2>
+        <p>
+            Website: <a href="http://wireless.kernel.org/en/users/Documentation/iw">http://wireless.kernel.org/en/users/Documentation/iw</a><br>
+            License(s): <a href="licenses/iw.txt">ISC</a>
+        </p>
+
+        <h2>iwinfo 2015-06-01-ade8b1b299cbd5748db1acf80dd3e9f567938371</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>jshn 2015-11-08-10429bccd0dc5d204635e110a7a8fae7b80d16cb</h2>
+        <p>
+            License(s): <a href="licenses/jshn.txt">ISC</a>
+        </p>
+
+        <h2>jsmn 1</h2>
+        <p>
+            License(s): <a href="licenses/jsmn.txt">MIT</a>
+        </p>
+
+        <h2>jsonfilter 2014-06-19-cdc760c58077f44fc40adbbe41e1556a67c1b9a9</h2>
+        <p>
+            Website: <a href="http://git.openwrt.org/?p=project/jsonpath.git">http://git.openwrt.org/?p=project/jsonpath.git</a><br>
+            License(s): <a href="licenses/jsonfilter.txt">ISC</a>
+        </p>
+
+        <h2>kernel 3.18.29-1-dbb79befbca883103711f4ec6b3bb78a</h2>
+        <p>
+            Website: <a href="http://www.kernel.org/">http://www.kernel.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ath 3.18.29+20160607-1</h2>
+        <p>
+            Website: <a href="http://www.qca.qualcomm.com">http://www.qca.qualcomm.com</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ath9k 3.18.29+20160607-1</h2>
+        <p>
+            Website: <a href="http://linuxwireless.org/en/users/Drivers/ath9k">http://linuxwireless.org/en/users/Drivers/ath9k</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ath9k-common 3.18.29+20160607-1</h2>
+        <p>
+            Website: <a href="http://linuxwireless.org/en/users/Drivers/ath9k">http://linuxwireless.org/en/users/Drivers/ath9k</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-button-hotplug 3.18.29-3</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-cfg80211 3.18.29+20160607-1</h2>
+        <p>
+            Website: <a href="http://www.qca.qualcomm.com">http://www.qca.qualcomm.com</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-aead 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-aes 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-arc4 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-core 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-hash 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-crypto-manager 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-gpio-button-hotplug 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-i2c-algo-bit 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-i2c-core 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-i2c-gpio 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-input-core 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ip6tables 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ipt-conntrack 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ipt-core 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ipt-nat 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-ipv6 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-lib-crc-ccitt 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-mac80211 3.18.29+20160607-1</h2>
+        <p>
+            Website: <a href="http://www.qca.qualcomm.com">http://www.qca.qualcomm.com</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-conntrack 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-conntrack6 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-ipt 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-ipt6 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-nat 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>kmod-nf-nathelper 3.18.29-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>libblobmsg-json 2015-11-08-10429bccd0dc5d204635e110a7a8fae7b80d16cb</h2>
+        <p>
+            License(s): <a href="licenses/libblobmsg-json.txt">ISC</a>
+        </p>
+
+        <h2>libc 1.0.14-1</h2>
+        <p>
+            Website: <a href="http://www.uclibc.org/">http://www.uclibc.org/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libconfig 1.4.9-1</h2>
+        <p>
+            Website: <a href="http://www.hyperrealm.com/libconfig/">http://www.hyperrealm.com/libconfig/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libdaemon 0.14-5</h2>
+        <p>
+            Website: <a href="http://0pointer.de/lennart/projects/libdaemon/">http://0pointer.de/lennart/projects/libdaemon/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libevent2-core 2.0.22-1</h2>
+        <p>
+            Website: <a href="http://www.monkey.org/~provos/libevent/">http://www.monkey.org/~provos/libevent/</a><br>
+            License(s): <a href="licenses/libevent2-core.txt">BSD-3-Clause</a>
+        </p>
+
+        <h2>libgcc 4.8-linaro-1</h2>
+        <p>
+            Website: <a href="http://gcc.gnu.org/">http://gcc.gnu.org/</a><br>
+            License(s): <a href="licenses/gpl-3.0-with-gcc-exception.txt">GPL-3.0-with-GCC-exception</a>
+        </p>
+
+        <h2>libgpio 2015-01-15-1</h2>
+        <p>
+            Website: <a href="https://github.com/Linutronix/libgpio/">https://github.com/Linutronix/libgpio/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libip4tc 1.4.21-1</h2>
+        <p>
+            Website: <a href="http://netfilter.org/">http://netfilter.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>libip6tc 1.4.21-1</h2>
+        <p>
+            Website: <a href="http://netfilter.org/">http://netfilter.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>libiwinfo 2015-06-01-ade8b1b299cbd5748db1acf80dd3e9f567938371</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>libjson-c 0.12-1</h2>
+        <p>
+            Website: <a href="http://oss.metaparadigm.com/json-c/">http://oss.metaparadigm.com/json-c/</a><br>
+            License(s): <a href="licenses/libjson-c.txt">MIT</a>
+        </p>
+
+        <h2>libjson-script 2015-11-08-10429bccd0dc5d204635e110a7a8fae7b80d16cb</h2>
+        <p>
+            License(s): <a href="licenses/libjson-script.txt">ISC</a>
+        </p>
+
+        <h2>libmbedtls 2.3.0-1</h2>
+        <p>
+            Website: <a href="https://tls.mbed.org">https://tls.mbed.org</a><br>
+            License(s): <a href="licenses/libmbedtls.txt">Apache-2.0</a>
+        </p>
+
+        <h2>libnl 3.2.21-1</h2>
+        <p>
+            Website: <a href="http://people.suug.ch/~tgr/libnl/">http://people.suug.ch/~tgr/libnl/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libnl-tiny 0.1-4</h2>
+        <p>
+            Website: <a href="https://wiki.openwrt.org/doc/techref/libnl">https://wiki.openwrt.org/doc/techref/libnl</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libopenssl 1.0.2j-1</h2>
+        <p>
+            This product includes cryptographic software written by Eric Young (eay@cryptsoft.com)<br>
+            This product includes software developed by Bodo Moeller.<br>
+            This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/)<br>
+            This product includes software written by Tim Hudson (tjh@cryptsoft.com)<br>
+            Website: <a href="http://www.openssl.org/">http://www.openssl.org/</a><br>
+            License(s): <a href="licenses/libopenssl.txt">OpenSSL</a>
+        </p>
+
+        <h2>libpcre 8.40-1</h2>
+        <p>
+            Website: <a href="http://www.pcre.org/">http://www.pcre.org/</a><br>
+            License(s): <a href="licenses/libpcre.txt">BSD-3-Clause</a>
+        </p>
+
+        <h2>libprotobuf-c v1.2.1</h2>
+        <p>
+            Website: <a href="http://code.google.com/p/protobuf-c/">http://code.google.com/p/protobuf-c/</a><br>
+            License(s): <a href="licenses/libprotobuf-c.txt">BSD-2-Clause</a>
+        </p>
+
+        <h2>libpthread 1.0.14-1</h2>
+        <p>
+            Website: <a href="http://www.uclibc.org/">http://www.uclibc.org/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>librpc 2015-11-04-a921e3ded051746f9f7cd5e5a312fb6771716aac</h2>
+        <p>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>librt 1.0.14-1</h2>
+        <p>
+            Website: <a href="http://www.uclibc.org/">http://www.uclibc.org/</a><br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libstdcpp 4.8-linaro-1</h2>
+        <p>
+            Website: <a href="http://gcc.gnu.org/">http://gcc.gnu.org/</a><br>
+            License(s): <a href="licenses/gpl-3.0-with-gcc-exception.txt">GPL-3.0-with-GCC-exception</a>
+        </p>
+
+        <h2>libubox 2015-11-08-10429bccd0dc5d204635e110a7a8fae7b80d16cb</h2>
+        <p>
+            License(s): <a href="licenses/libubox.txt">ISC</a>
+        </p>
+
+        <h2>libubus 2015-05-25-f361bfa5fcb2daadf3b160583ce665024f8d108e</h2>
+        <p>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libuci 2015-08-27.1-1</h2>
+        <p>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libwebsockets 2017-02-14-v2.1.1</h2>
+        <p>
+            This product includes software developed by the University of California, Berkeley and its contributors.<br>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>libxtables 1.4.21-1</h2>
+        <p>
+            Website: <a href="http://netfilter.org/">http://netfilter.org/</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>logd 2015-11-22-c086167a0154745c677f8730a336ea9cf7d71031</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>lua 5.1.5</h2>
+        <p>
+            License(s): <a href="licenses/lua.txt">MIT</a>
+        </p>
+
+        <h2>mtd 21</h2>
+        <p>
+            Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm.<br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>netifd 2015-12-16-245527193e90906451be35c2b8e972b8712ea6ab</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>nginx 1.10.3-1</h2>
+        <p>
+            Website: <a href="http://nginx.org/">http://nginx.org/</a><br>
+            License(s): <a href="licenses/nginx.txt">BSD-2-Clause</a>
+        </p>
+
+        <h2>ocf-crypto-headers 20110720</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>openssl 1.0.2j</h2>
+        <p>
+            This product includes cryptographic software written by Eric Young (eay@cryptsoft.com)<br>
+            This product includes software developed by Bodo Moeller.<br>
+            This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/)<br>
+            This product includes software written by Tim Hudson (tjh@cryptsoft.com)<br>
+            License(s): <a href="licenses/openssl.txt">OpenSSL</a>
+        </p>
+
+        <h2>openssl-util 1.0.2j-1</h2>
+        <p>
+            This product includes cryptographic software written by Eric Young (eay@cryptsoft.com)<br>
+            This product includes software developed by Bodo Moeller.<br>
+            This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/)<br>
+            This product includes software written by Tim Hudson (tjh@cryptsoft.com)<br>
+            Website: <a href="http://www.openssl.org/">http://www.openssl.org/</a><br>
+            License(s): <a href="licenses/openssl-util.txt">OpenSSL</a>
+        </p>
+
+        <h2>polarssl-mini 1.3.4</h2>
+        <p>
+            License(s): <a href="licenses/polarssl-mini.txt">GPL-2.0</a>
+        </p>
+
+        <h2>poly1305-donna 1.0</h2>
+        <p>
+            Website: <a href="http://cr.yp.to/mac.html">http://cr.yp.to/mac.html</a><br>
+            License(s): <a href="licenses/poly1305-donna.txt">MIT</a>
+        </p>
+
+        <h2>procd 2015-10-29.1-d5fddd91b966424bb63e943e789704d52382cc18</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>protobuf 3.2.0-1</h2>
+        <p>
+            Website: <a href="http://code.google.com/p/protobuf/">http://code.google.com/p/protobuf/</a><br>
+            License(s): <a href="licenses/protobuf.txt">BSD-3-Clause</a>
+        </p>
+
+        <h2>qca-legacy-uboot-bsb002 ga927b17-1</h2>
+        <p>
+            Website: <a href="http://www.denx.de/wiki/U-Boot">http://www.denx.de/wiki/U-Boot</a><br>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>srp 2.1.2-1</h2>
+        <p>
+            This product includes cryptographic software written by Eric Young (eay@mincom.oz.au)<br>
+            This product includes software developed by the University of California, Berkeley and its contributors.<br>
+            This product includes software written by Tim Hudson (tjh@mincom.oz.au)<br>
+            Website: <a href="http://srp.stanford.edu/">http://srp.stanford.edu/</a><br>
+            License(s): <a href="licenses/srp.txt">MIT</a>
+        </p>
+
+        <h2>tlsdate 2016-11-23</h2>
+        <p>
+            Website: <a href="https://www.github.com/ioerror/tlsdate">https://www.github.com/ioerror/tlsdate</a><br>
+            License(s): <a href="licenses/tlsdate.txt">BSD-3-Clause</a>
+        </p>
+
+        <h2>tomcrypt 1.17</h2>
+        <p>
+            Website: <a href="http://www.libtom.net/">http://www.libtom.net/</a><br>
+            License(s): <a href="licenses/tomcrypt.txt">MIT</a>
+        </p>
+
+        <h2>tommath 0.42.0</h2>
+        <p>
+            Website: <a href="http://www.libtom.net/">http://www.libtom.net/</a><br>
+            License(s): <a href="licenses/tommath.txt">MIT</a>
+        </p>
+
+        <h2>uboot-envtools 2014.10-2</h2>
+        <p>
+            Website: <a href="http://www.denx.de/wiki/U-Boot">http://www.denx.de/wiki/U-Boot</a><br>
+            License(s): <a href="licenses/uboot-envtools.txt">GPL-2.0</a>
+        </p>
+
+        <h2>ubox 2015-11-22-c086167a0154745c677f8730a336ea9cf7d71031</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>ubus 2015-05-25-f361bfa5fcb2daadf3b160583ce665024f8d108e</h2>
+        <p>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>ubusd 2015-05-25-f361bfa5fcb2daadf3b160583ce665024f8d108e</h2>
+        <p>
+            License(s): <a href="licenses/lgpl-2.1.txt">LGPL-2.1</a>
+        </p>
+
+        <h2>uci 2015-08-27.1-1</h2>
+        <p>
+            License(s): <a href="licenses/gpl-2.0.txt">GPL-2.0</a>
+        </p>
+
+        <h2>usign 2015-05-08-cf8dcdb8a4e874c77f3e9a8e9b643e8c17b19131</h2>
+        <p>
+            License(s): <a href="licenses/usign.txt">ISC</a>
+        </p>
+
+        <h2>zlib 1.2.8-1</h2>
+        <p>
+            Website: <a href="http://www.zlib.net/">http://www.zlib.net/</a><br>
+            License(s): <a href="licenses/zlib.txt">Zlib</a>
+        </p>
+        <!-- End Licensing Information -->
+      </div>
+    </div>
+</body>
+</html>
