@@ -8,6 +8,8 @@ import uuid
 from ssdp import SSDPServer
 from ssdp_web_server import UPNPHTTPServer
 import socket
+from netifaces import AF_INET, AF_INET6, AF_LINK, AF_PACKET, AF_BRIDGE
+import netifaces as ni
 
 
 # Create web API instance.
@@ -92,9 +94,35 @@ def set_channel(channel):
     return jsonify({'result': 'success'})
 
 
+def get_ip_address():
+    interfaces = ni.interfaces()
+    adapter = interfaces[1]
+    adapter_mac = ni.ifaddresses(adapter)[AF_LINK]  # NOTE: AF_LINK is an alias for AF_PACKET
+    adapter_ips = ni.ifaddresses(adapter)[AF_INET]  #  [{'broadcast': '172.16.161.7', 'netmask': '255.255.255.248', 'addr': '172.16.161.6'}]
+    adapter_addr = adapter_ips[0]['addr']           # eth0 ipv4 interface address
+    return adapter_addr
+"""
+    >> > from netifaces import AF_INET, AF_INET6, AF_LINK, AF_PACKET, AF_BRIDGE
+    >> > import netifaces as ni
+    >> > ni.interfaces()
+    ['lo', 'eth0', 'eth1', 'vboxnet0', 'dummy1']
+    >> >
+    >> > ni.ifaddresses('eth0')[AF_LINK]  # NOTE: AF_LINK is an alias for AF_PACKET
+    [{'broadcast': 'ff:ff:ff:ff:ff:ff', 'addr': '00:02:55:7b:b2:f6'}]
+    >> > ni.ifaddresses('eth0')[AF_INET]
+    [{'broadcast': '172.16.161.7', 'netmask': '255.255.255.248', 'addr': '172.16.161.6'}]
+    >> >
+    >> >  # eth0 ipv4 interface address
+    >> > ni.ifaddresses('eth0')[AF_INET][0]['addr']
+    '172.16.161.6'
+    >> >>
+"""
+
+
+
 def main():
     device_uuid = uuid.uuid4()
-    local_ip_address = "10.1.1.150" #socket.gethostbyname(socket.gethostname())
+    local_ip_address = get_ip_address()
     http_server = UPNPHTTPServer(8088,
                                  friendly_name="Xeleum Xi-Fi Gateway",
                                  manufacturer="Xeleum Lighting",
