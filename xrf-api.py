@@ -111,7 +111,8 @@ def get_ip_address():
 def main():
     device_uuid = uuid.uuid4()
     local_ip_address = get_ip_address()
-    http_server = UPNPHTTPServer(8089,
+    web_server_port = 8088
+    http_server = UPNPHTTPServer(web_server_port,
                                  friendly_name="Xeleum Xi-Fi Gateway",
                                  manufacturer="Xeleum Lighting",
                                  manufacturer_url='http://www.xeleum.com/',
@@ -128,7 +129,7 @@ def main():
     ssdp_server.register('local',
                   'uuid:{}::upnp:rootdevice'.format(device_uuid),
                   'upnp:rootdevice',
-                  'http://{}:8088/description.xml'.format(local_ip_address))
+                  'http://{}:{}/description.xml'.format(local_ip_address,web_server_port))
     ssdp_server.start()
 
     XrfAPI.getInstance().start()
